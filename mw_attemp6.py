@@ -8,7 +8,7 @@ import pickle, sys
 from datetime import datetime
 
 def show_input(ob, iny, inx):
-	scaledimg = cv2.cvtColor(ob, cv2.COLOR_BGR2RGB)
+    scaledimg = cv2.cvtColor(ob, cv2.COLOR_BGR2GRAY)
 	scaledimg = cv2.resize(scaledimg, (iny, inx))
 	cv2.imshow('main', scaledimg)
 	cv2.waitKey(1)
@@ -42,7 +42,7 @@ def eval_genomes(genomes, config):
 		# cv2.namedWindow("main", cv2.WINDOW_NORMAL)
 
 		while not done:
-			env.render()
+			# env.render()
 			# frame += 1
 
 
@@ -97,7 +97,7 @@ def eval_genomes(genomes, config):
 			current_score = score
 
 			if xpos >= xpos_end and xpos > 600:
-				fitness_current += 100000
+				fitness_current += 1000000
 				done = True
 
 			if fitness_current > current_max_fitness:
@@ -134,17 +134,17 @@ while True:
 	p.add_reporter(stats)
 	p.add_reporter(neat.Checkpointer(10))
 
+	# p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-6')
 	winner = p.run(eval_genomes, n=30)
 	print('\nBest genome:\n{!s}'.format(winner))
 
 	# node_names = {-1:'A', -2: 'B', 0:'A XOR B'}
-	visualize.draw_net(config, winner, True)#, node_names=node_names)
-	visualize.plot_stats(stats, ylog=False, view=True)
-	visualize.plot_species(stats, view=True)
+	# visualize.draw_net(config, winner, True)#, node_names=node_names)
+	# visualize.plot_stats(stats, ylog=False, view=True)
+	# visualize.plot_species(stats, view=True)
 
-	p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-11')
 
-	with open('results/winner_{}.pkl'.format(timestamp), 'wb') as output:
+	with open('results/winner_{}.pkl'.format(timestamp), 'wb+') as output:
 		pickle.dump(winner, output, 1)
 
 	env.reset()
